@@ -183,7 +183,10 @@ plugin.onAct(message => {
                   ipClient
                     .setCharacteristics({ [`${characteristic.aid}.${characteristic.iid}`]: item.value })
                     .then(() => {})
-                    .catch((e) => plugin.log(e.message));
+                    .catch((e) => {
+                      delete mainData[did].connection;
+                      plugin.log(e.message)
+                    });
                 }
               })
           }
@@ -468,7 +471,6 @@ function subScanDevice(did) {
     })
 
   ipClient.on('event', (e) => {
-    plugin.log('characteristics event: ' + JSON.stringify(e))
     if (e.characteristics !== undefined) {
       e.characteristics
         .forEach(item => {
