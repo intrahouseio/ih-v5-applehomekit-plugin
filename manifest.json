@@ -1,0 +1,17 @@
+{
+  "id": "applehomekit",
+  "description": "Apple HomeKit Plugin",
+  "module": "index.js",
+  "single": 1,
+  "nochannels": 0,
+  "restartOnChannelsChange": 1,
+
+  "channel_popup": {
+    "delete": true
+  },
+
+  "channel_folder_popup": {
+    "browse": { "variant": "subtree" },
+    "delete": true
+  }
+}

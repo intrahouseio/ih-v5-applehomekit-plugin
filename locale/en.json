@@ -1,0 +1,9 @@
+{
+  "Id": "Id",
+  "Address": "IP-address",
+  "Port": "Port",
+  "Model": "Model",
+  "AvailableToPair": "Available To Pair",
+  "pairToPlugin": "Paired with plugin"
+}
+  

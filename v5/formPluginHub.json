@@ -1,0 +1,86 @@
+{
+  "grid": [
+    { "id": "p1", "xs": 6, "class": "main", "table": "units" },
+    { "id": "p2", "xs": 6, "class": "main", "table": "units" }
+  ],
+
+  "spacing": 10,
+  "breadcrumbs": { "tree": "plugins" },
+  "p1": [
+    {
+      "prop": "id",
+      "title": "$Id",
+      "type": "text"
+    },
+    {
+      "prop": "name",
+      "title": "$Name",
+      "type": "text"
+    },
+    {
+      "prop": "address",
+      "title": "$Address",
+      "type": "text"
+    },
+    {
+      "prop": "port",
+      "title": "$Port",
+      "type": "text"
+    },
+    {
+      "prop": "md",
+      "title": "$Model",
+      "type": "text"
+    }
+  ],
+  "p2": [
+    {
+      "prop": "availableToPair",
+      "title": "$AvailableToPair",
+      "type": "text"
+    },
+    {
+      "prop": "pairToPlugin",
+      "title": "$pairToPlugin",
+      "type": "text"
+    },
+    {
+      "prop": "pincode",
+      "title": "Pin Code",
+      "type": "input",
+      "hide": "!(data.p2.availableToPair == true && data.p2.pairToPlugin == false)"
+    },
+    {
+      "prop": "pair",
+      "title": "Pair to plugin",
+      "type": "button",
+      "command": "scandata",
+      "color": "green",
+      "hide": "data.p2.ispair || !(data.p2.availableToPair == true && data.p2.pairToPlugin == false)"
+    },
+    {
+      "prop": "unpair",
+      "title": "Unpair to plugin",
+      "type": "button",
+      "command": "scandata",
+      "color": "red",
+      "hide": "data.p2.ispair || !(data.p2.availableToPair == false && data.p2.pairToPlugin == true)"
+    },
+    {
+      "prop": "clearpair",
+      "title": "Clear pair to plugin",
+      "type": "button",
+      "command": "scandata",
+      "color": "red",
+      "hide": "data.p2.ispair || !(data.p2.availableToPair == true && data.p2.pairToPlugin == true)"
+    },
+    {
+      "prop": "ispair",
+      "title": "please wait...",
+      "type": "button",
+      "command": "scandata",
+      "color": "orange",
+      "hide": "!data.p2.ispair"
+    }
+  ]
+}
