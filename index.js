@@ -184,8 +184,8 @@ plugin.onAct(message => {
                     .setCharacteristics({ [`${characteristic.aid}.${characteristic.iid}`]: item.value })
                     .then(() => {})
                     .catch((e) => {
-                      delete mainData[did].connection;
                       plugin.log(e.message)
+                      disconnectDevice(did);
                     });
                 }
               })
