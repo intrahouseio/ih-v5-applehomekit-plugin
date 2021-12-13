@@ -19,11 +19,11 @@ function parseDevice(device, pairingData) {
                 if (service.characteristics !== undefined && service.characteristics.length) {
                   service.characteristics.forEach(characteristic => {
                     if (temp[aid] === undefined) {
-                      temp[aid] = { services: {} };
+                      temp[aid] = { name: accessory.type, services: {} };
                     }
                   
                     if (temp[aid].services[service.iid] === undefined) {
-                      temp[aid].services[service.iid] = { props: {}, name: service.description || characteristicNames[service.type.toLocaleLowerCase()] };
+                      temp[aid].services[service.iid] = { props: {}, name: service.description || serviceNames[service.type.toLocaleLowerCase()] || characteristicNames[service.type.toLocaleLowerCase()] || service.type };
                     }
                     const charName = characteristic.description || characteristicNames[characteristic.type.toLocaleLowerCase()];
                     if (service.type === '0000003E-0000-1000-8000-0026BB765291') {
@@ -55,6 +55,7 @@ function parseDevice(device, pairingData) {
 }
 
 function structData(did, dname, data) {
+  console.log(data);
   const checks = {};
   const temp = {
     accessories: [],
@@ -132,6 +133,89 @@ function parseChannels(data) {
 }
 
 const suffix = '-0000-1000-8000-0026BB765291'.toLocaleLowerCase();
+
+const serviceNames = {
+  ['00000260' + suffix]: 'AccessCode',
+  ['000000da' + suffix]: 'AccessControl',
+  ['0000003e' + suffix]: 'AccessoryInformation',
+  ['00000270' + suffix]: 'AccessoryMetrics',
+  ['00000239' + suffix]: 'AccessoryRuntimeInformation',
+  ['000000bb' + suffix]: 'AirPurifier',
+  ['0000008d' + suffix]: 'AirQualitySensor',
+  ['00000267' + suffix]: 'AssetUpdate',
+  ['0000026a' + suffix]: 'Assistant',
+  ['00000127' + suffix]: 'AudioStreamManagement',
+  ['00000096' + suffix]: 'BatteryService',
+  ['00000096' + suffix]: 'Battery',
+  ['000000a1' + suffix]: 'BridgeConfiguration',
+  ['00000062' + suffix]: 'BridgingState',
+  ['00000111' + suffix]: 'CameraControl',
+  ['0000021a' + suffix]: 'CameraOperatingMode',
+  ['00000204' + suffix]: 'CameraEventRecordingManagement',
+  ['00000204' + suffix]: 'CameraRecordingManagement',
+  ['00000110' + suffix]: 'CameraRTPStreamManagement',
+  ['00000097' + suffix]: 'CarbonDioxideSensor',
+  ['0000007f' + suffix]: 'CarbonMonoxideSensor',
+  ['0000005a' + suffix]: 'Relay',
+  ['0000005a' + suffix]: 'CloudRelay',
+  ['00000080' + suffix]: 'ContactSensor',
+  ['00000129' + suffix]: 'DataStreamTransportManagement',
+  ['00000237' + suffix]: 'Diagnostics',
+  ['00000081' + suffix]: 'Door',
+  ['00000121' + suffix]: 'Doorbell',
+  ['00000040' + suffix]: 'Fan',
+  ['000000b7' + suffix]: 'Fanv2',
+  ['000000d7' + suffix]: 'Faucet',
+  ['000000ba' + suffix]: 'FilterMaintenance',
+  ['00000041' + suffix]: 'GarageDoorOpener',
+  ['000000bc' + suffix]: 'HeaterCooler',
+  ['000000bd' + suffix]: 'HumidifierDehumidifier',
+  ['00000082' + suffix]: 'HumiditySensor',
+  ['000000d9' + suffix]: 'InputSource',
+  ['000000cf' + suffix]: 'IrrigationSystem',
+  ['00000083' + suffix]: 'LeakSensor',
+  ['00000043' + suffix]: 'Lightbulb',
+  ['00000084' + suffix]: 'LightSensor',
+  ['00000044' + suffix]: 'LockManagement',
+  ['00000045' + suffix]: 'LockMechanism',
+  ['00000112' + suffix]: 'Microphone',
+  ['00000085' + suffix]: 'MotionSensor',
+  ['00000266' + suffix]: 'NFCAccess',
+  ['00000086' + suffix]: 'OccupancySensor',
+  ['00000047' + suffix]: 'Outlet',
+  ['00000055' + suffix]: 'Pairing',
+  ['00000221' + suffix]: 'PowerManagement',
+  ['000000a2' + suffix]: 'ProtocolInformation',
+  ['0000007e' + suffix]: 'SecuritySystem',
+  ['000000cc' + suffix]: 'ServiceLabel',
+  ['00000133' + suffix]: 'Siri',
+  ['00000253' + suffix]: 'SiriEndpoint',
+  ['000000b9' + suffix]: 'Slat',
+  ['000000b9' + suffix]: 'Slats',
+  ['00000228' + suffix]: 'SmartSpeaker',
+  ['00000087' + suffix]: 'SmokeSensor',
+  ['00000113' + suffix]: 'Speaker',
+  ['00000088' + suffix]: 'StatefulProgrammableSwitch',
+  ['00000089' + suffix]: 'StatelessProgrammableSwitch',
+  ['00000049' + suffix]: 'Switch',
+  ['00000125' + suffix]: 'TargetControl',
+  ['00000122' + suffix]: 'TargetControlManagement',
+  ['000000d8' + suffix]: 'Television',
+  ['00000113' + suffix]: 'TelevisionSpeaker',
+  ['0000008a' + suffix]: 'TemperatureSensor',
+  ['0000004a' + suffix]: 'Thermostat',
+  ['00000701' + suffix]: 'ThreadTransport',
+  ['00000099' + suffix]: 'TimeInformation',
+  ['00000203' + suffix]: 'TransferTransportManagement',
+  ['00000056' + suffix]: 'TunneledBTLEAccessoryService',
+  ['00000056' + suffix]: 'Tunnel',
+  ['000000d0' + suffix]: 'Valve',
+  ['0000020a' + suffix]: 'WiFiRouter',
+  ['0000020f' + suffix]: 'WiFiSatellite',
+  ['0000022a' + suffix]: 'WiFiTransport',
+  ['0000008b' + suffix]: 'Window',
+  ['0000008c' + suffix]: 'WindowCovering',	
+}
 
 const characteristicNames = {
   ['00000001' + suffix]: 'AdministratorOnlyAccess',
