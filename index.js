@@ -1,9 +1,10 @@
-const util = require('util');
-const plugin = require('ih-plugin-api')();
+const util = require('util');ß
 const Scanner = require('./lib/scanner');
 
 const { IPDiscovery, HttpClient } = require('hap-controller');
 const { parseDevice, parseChannels } = require('./tools');
+
+let plugin;
 
 let scanner;
 let isScan = false;
@@ -27,6 +28,11 @@ const scanDiscovery = new IPDiscovery();
 
 
 async function main() {
+  const argv = JSON.parse(process.argv[2]);
+  const pluginapi = argv && argv.pluginapi ? argv.pluginapi : 'ih-plugin-api';
+   
+  plugin = require(pluginapi+'/index.js')();
+
   opt = plugin.opt;
   scanner = new Scanner(plugin);
   settings = await plugin.params.get();
