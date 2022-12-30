@@ -50,6 +50,68 @@ async function main() {
       }
     });
 
+  plugin.onAct(message => {
+    if (!message.data) return;
+      message.data.forEach(item => {
+        try {
+          plugin.log('PUBLISH command ' + util.inspect(item));
+  
+          if (item.id) {
+            const did = item.id.split('/')[0];
+            if (mainData[did] !== undefined) {
+              const device = mainData[did];
+  
+              Object
+                .keys(device.characteristics)
+                .forEach(key => {
+                  const characteristic = device.characteristics[key];
+                  if (characteristic.topic === item.id) {
+                    if (mainData[did].connection === undefined) {
+                      mainData[did].connection = new HttpClient(device.id, device.address, device.port, pairingStore[device.id]);
+                    }
+                    const ipClient = mainData[did].connection;
+                    ipClient
+                      .setCharacteristics({ [`${characteristic.aid}.${characteristic.iid}`]: item.value })
+                      .then(() => {})
+                      .catch((e) => {
+                        plugin.log(e.message)
+                        disconnectDevice(did);
+                      });
+                  }
+                })
+            }
+          }
+        } catch (e) {
+          const errStr = 'ERROR Act: ' + util.inspect(e) + ' /n message.data item: ' + util.inspect(item);
+          plugin.log(errStr);
+        }
+      });
+  });
+    
+  plugin.onScan(scanObj => {
+    if (scanObj.uuid && scanObj.start) {
+      scanner.request(scanObj);
+      scannerStart();
+    }
+  
+    if (scanObj.stop) {
+      scannerStop();
+      scanner.stop();
+    }
+  
+    if (scanObj.method === 'scandata' && scanObj.button) {
+      if (scanObj.button.prop === 'pair') {
+        pairingDevice(scanObj);
+      }
+      if (scanObj.button.prop === 'unpair') {
+        unpairingDevice(scanObj);
+      }
+      if (scanObj.button.prop === 'clearpair') {
+        clearpairingDevice(scanObj);
+      }
+    }
+  });
+
   ipDiscovery.on('serviceUp', (device) => {
     if (channels[device.id] && mainData[device.id] === undefined) {
       mainData[device.id] = device;
@@ -165,68 +227,6 @@ function characteristicDeviceData(device, characteristic, v) {
   const value = characteristic.format === 'bool' ? (v ? 1 : 0) : v
   plugin.sendData([{ id: characteristic.topic, value: value }]);
 }
-
-plugin.onAct(message => {
-  if (!message.data) return;
-    message.data.forEach(item => {
-      try {
-        plugin.log('PUBLISH command ' + util.inspect(item));
-
-        if (item.id) {
-          const did = item.id.split('/')[0];
-          if (mainData[did] !== undefined) {
-            const device = mainData[did];
-
-            Object
-              .keys(device.characteristics)
-              .forEach(key => {
-                const characteristic = device.characteristics[key];
-                if (characteristic.topic === item.id) {
-                  if (mainData[did].connection === undefined) {
-                    mainData[did].connection = new HttpClient(device.id, device.address, device.port, pairingStore[device.id]);
-                  }
-                  const ipClient = mainData[did].connection;
-                  ipClient
-                    .setCharacteristics({ [`${characteristic.aid}.${characteristic.iid}`]: item.value })
-                    .then(() => {})
-                    .catch((e) => {
-                      plugin.log(e.message)
-                      disconnectDevice(did);
-                    });
-                }
-              })
-          }
-        }
-      } catch (e) {
-        const errStr = 'ERROR Act: ' + util.inspect(e) + ' /n message.data item: ' + util.inspect(item);
-        plugin.log(errStr);
-      }
-    });
-});
-
-plugin.onScan(scanObj => {
-  if (scanObj.uuid && scanObj.start) {
-    scanner.request(scanObj);
-    scannerStart();
-  }
-
-  if (scanObj.stop) {
-    scannerStop();
-    scanner.stop();
-  }
-
-  if (scanObj.method === 'scandata' && scanObj.button) {
-    if (scanObj.button.prop === 'pair') {
-      pairingDevice(scanObj);
-    }
-    if (scanObj.button.prop === 'unpair') {
-      unpairingDevice(scanObj);
-    }
-    if (scanObj.button.prop === 'clearpair') {
-      clearpairingDevice(scanObj);
-    }
-  }
-});
 
 scanDiscovery.on('serviceUp', (device) => {
   if (device.availableToPair) {
