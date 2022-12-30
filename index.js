@@ -1,4 +1,4 @@
-const util = require('util');ß
+const util = require('util');
 const Scanner = require('./lib/scanner');
 
 const { IPDiscovery, HttpClient } = require('hap-controller');
